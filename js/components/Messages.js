@@ -1,18 +1,31 @@
 import React, { Component } from 'react'
 import MessagesDisplay from './MessagesDisplay'
 import AddMessageForm from './AddMessageForm'
+import API from '../API.js'
+import MessageStore from '../stores/MessageStore'
 
 const moment = require('moment');
 
-export default class Messages extends Component {
+let _getAppState = () => {
+  return { messages: MessageStore.getAll() };
+}
+
+export default class Messages extends React.Component {
   constructor(props){
     super(props);
 
-    this.state = {
-      messages: []
-    }
+    this.state = _getAppState();
+    this.onChange = this.onChange.bind(this);
+  }
 
-    this.addMessage = this.addMessage.bind(this);
+  componentDidMount() {
+    API.fetchMessages();
+    MessageStore.on("change", this.onChange)
+  }
+
+  onChange() {
+    console.log("4. In the view");
+    this.setState(_getAppState() );
   }
 
   addMessage(message) {
@@ -26,7 +39,7 @@ export default class Messages extends Component {
 
         <div className="col-xs-6 col-xs-offset-3">
             <h3>New Message</h3>
-            <AddMessageForm addMessage={this.addMessage} nextId={this.state.messages.length} />
+            <AddMessageForm addMessage={this.addMessage} />
         </div>
 
         <div className="col-xs-12">

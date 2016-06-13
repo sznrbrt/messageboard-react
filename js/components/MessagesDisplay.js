@@ -3,10 +3,17 @@ import React, { Component } from 'react'
 export default class MessagesDisplay extends Component {
   constructor(props){
     super(props);
-
   }
+
   render() {
-    let messages = [];
+    let messages = this.props.messages.length ? this.props.messages.map(message => {
+      return (
+        <tr key={message.id}>
+          <td>{message.content}</td>
+          <td>{message.timestamp}</td>
+        </tr>
+      )
+    }) : []
     return (
       <table className="table">
         <thead>
