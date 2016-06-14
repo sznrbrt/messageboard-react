@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import MessageActions from '../actions/MessageActions'
 
 const moment = require('moment');
 
@@ -7,19 +8,16 @@ export default class AddMessageForm extends Component {
     super(props);
 
     this.state = {
-      content: '',
-      timestamp: ''
+      content: ''
     }
     this.onSubmit = this.onSubmit.bind(this);
   }
 
   onSubmit(event) {
     event.preventDefault();
-    let now = moment().format("h:mm:ss a").toString();
     if(!this.state.content) return;
-    this.state.timestamp = now;
-    this.state.id = this.props.nextId;
-    this.props.addMessage(this.state);
+    console.log('1. In component');
+    MessageActions.addNewMessage(this.state);
     this.setState({content:''});
   }
 

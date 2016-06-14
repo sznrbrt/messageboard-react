@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import MessagesDisplay from './MessagesDisplay'
 import AddMessageForm from './AddMessageForm'
-import API from '../API.js'
 import MessageStore from '../stores/MessageStore'
+import MessageActions from '../actions/MessageActions'
+import API from '../API.js'
 
 const moment = require('moment');
 
@@ -15,17 +16,21 @@ export default class Messages extends React.Component {
     super(props);
 
     this.state = _getAppState();
-    this.onChange = this.onChange.bind(this);
+    this._onChange = this._onChange.bind(this);
   }
 
   componentDidMount() {
-    API.fetchMessages();
-    MessageStore.on("change", this.onChange)
+    MessageActions.getAllMessages();
+    MessageStore.startListening(this._onChange);
   }
 
-  onChange() {
+  componentWillUnmount() {
+    MessageStore.stopListening(this._onChange)
+  }
+
+  _onChange() {
     console.log("4. In the view");
-    this.setState(_getAppState() );
+    this.setState( _getAppState() );
   }
 
   addMessage(message) {
